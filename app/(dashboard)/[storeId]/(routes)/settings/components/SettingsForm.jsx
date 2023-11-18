@@ -16,6 +16,9 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import toast from 'react-hot-toast';
+import axios from 'axios';
+import { useParams, useRouter } from 'next/navigation';
 
 const formSchema = z.object({
     name: z.string().min(1)
@@ -25,13 +28,28 @@ const SettingsForm = ({ initialData }) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
+    const params = useParams()
+    const router = useRouter()
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: initialData,
     })
 
-    const onSubmit = data => {
-        console.log(data)
+    const onSubmit = async data => {
+
+        try {
+            setLoading(true)
+            await axios.patch(`/api/stores/${params.storeId}`, data)
+            router.refresh()
+            toast.success("Store Updated")
+
+        } catch (error) {
+            toast.error("Something Went Wrong")
+        } finally {
+            setLoading(false)
+        }
+
     }
 
     return (
