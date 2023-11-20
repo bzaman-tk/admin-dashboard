@@ -5,14 +5,14 @@ import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
-const BillboardClient = () => {
+const BillboardClient = ({ data }) => {
     const router = useRouter()
     const params = useParams()
 
     return (
         <>
             <div className="flex items-center justify-between">
-                <Heading title="Billboard Title" description="Billboard Description" />
+                <Heading title={`Billboard [${data?.length}]`} description="Billboard Description" />
                 <Button
                     variant="outline"
                     onClick={() => router.push(`/${params.storeId}/billboards/new`)}
