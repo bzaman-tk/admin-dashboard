@@ -23,6 +23,7 @@ import {
 import { Input } from '@/components/ui/input';
 import AlertModal from '@/components/modals/AlertModal';
 import useOrigin from '@/hooks/useOrigin';
+import ImageUpload from '@/components/ui/ImageUpload';
 
 const formSchema = z.object({
     label: z.string().min(1),
@@ -52,31 +53,32 @@ const BillboardForm = ({ initialData }) => {
     })
 
     const onSubmit = async data => {
-
         try {
             setLoading(true)
-            await axios.patch(`/api/stores/${params.storeId}`, data)
+            if (initialData) {
+                await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data)
+            } else {
+                await axios.post(`/api/${params.storeId}/billboards`, data)
+            }
             router.refresh()
-            toast.success("Store Updated")
-
+            toast.success(toastMessage)
         } catch (error) {
             toast.error("Something Went Wrong")
         } finally {
             setLoading(false)
         }
-
     }
 
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/stores/${params.storeId}`)
+            await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
             router.refresh()
             router.push('/')
-            toast.success("Store Deleted")
+            toast.success("Billboard Deleted")
 
         } catch (error) {
-            toast.error("Make Sure you Remove all Products and Categories First.")
+            toast.error("Make Sure you Remove all Categories using this Billboard First.")
         } finally {
             setLoading(false)
             setOpen(false)
@@ -107,6 +109,24 @@ const BillboardForm = ({ initialData }) => {
             <Separator />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 w-full'>
+                    <FormField
+                        contron={form.control}
+                        name="imageUrl"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Background Image</FormLabel>
+                                <FormControl>
+                                    <ImageUpload
+                                        value={field.value ? [field.value] : []}
+                                        disabled={loading}
+                                        onChange={url => field.onChange(url)}
+                                        onRemove={() => field.onChange('')}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <div className="grid grid-cols-3 gap-8">
                         <FormField
                             contron={form.control}
