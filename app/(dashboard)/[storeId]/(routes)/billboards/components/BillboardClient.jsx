@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { columns } from "./columns";
+import ApiList from "@/components/ui/ApiList";
 
 const BillboardClient = ({ data }) => {
     const router = useRouter()
@@ -26,6 +27,9 @@ const BillboardClient = ({ data }) => {
 
             <Separator />
             <DataTable searchKey="label" columns={columns} data={data} />
+            <Heading title="API" description="API calls for Billboards" />
+            <Separator />
+            <ApiList entityName="billboards" entityIdName="billboardId" />
         </>
     );
 };

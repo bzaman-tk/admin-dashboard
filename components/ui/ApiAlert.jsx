@@ -22,7 +22,7 @@ const ApiAlert = ({ title, description, variant = 'public' }) => {
     }
 
     return (
-        <Alert>
+        <Alert className="mt-6">
             <Server className="h-4 w-4" />
             <AlertTitle className="flex items-center gap-x-2">
                 {title}
