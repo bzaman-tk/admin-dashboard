@@ -1,9 +1,11 @@
 'use client'
 import Heading from "@/components/ui/Heading";
 import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { columns } from "./columns";
 
 const BillboardClient = ({ data }) => {
     const router = useRouter()
@@ -11,7 +13,7 @@ const BillboardClient = ({ data }) => {
 
     return (
         <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pb-4">
                 <Heading title={`Billboard [${data?.length}]`} description="Billboard Description" />
                 <Button
                     variant="outline"
@@ -23,6 +25,7 @@ const BillboardClient = ({ data }) => {
             </div>
 
             <Separator />
+            <DataTable searchKey="label" columns={columns} data={data} />
         </>
     );
 };
