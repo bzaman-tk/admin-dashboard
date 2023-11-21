@@ -59,7 +59,7 @@ const BillboardForm = ({ initialData }) => {
                 await axios.post(`/api/${params.storeId}/billboards`, data)
             }
             router.refresh()
-            router.push(`/${params.storeId}/billboards`)
+            router.push(`/${params.storeId}/billboards`, undefined, { shallow: true })
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Something Went Wrong")
@@ -73,7 +73,7 @@ const BillboardForm = ({ initialData }) => {
             setLoading(true)
             await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
             router.refresh()
-            router.push('/')
+            router.push(`/${params.storeId}/billboards`)
             toast.success("Billboard Deleted")
 
         } catch (error) {
@@ -146,7 +146,6 @@ const BillboardForm = ({ initialData }) => {
                     </Button>
                 </form>
             </Form>
-            <Separator />
 
         </>
     );
