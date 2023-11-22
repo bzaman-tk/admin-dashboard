@@ -4,8 +4,13 @@ import CellAction from "./CellAction"
 
 export const columns = [
     {
-        accessorKey: "label",
-        header: "Label",
+        accessorKey: "name",
+        header: "Name",
+    },
+    {
+        accessorKey: "billboard",
+        header: "Billboard",
+        cell: ({ row }) => row.original.billboardLabel,
     },
     {
         accessorKey: "createdAt",
