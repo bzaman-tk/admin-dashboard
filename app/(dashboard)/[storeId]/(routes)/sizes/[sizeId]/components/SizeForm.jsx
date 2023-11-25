@@ -22,23 +22,23 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import AlertModal from '@/components/modals/AlertModal';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import ImageUpload from '@/components/ui/ImageUpload';
 
 const formSchema = z.object({
-    name: z.string().min(1),
-    billboardId: z.string().min(1)
+    label: z.string().min(1),
+    imageUrl: z.string().min(1)
 })
 
-const CategoryForm = ({ initialData, billboards }) => {
+const SizeForm = ({ initialData }) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const params = useParams()
     const router = useRouter()
 
-    const title = initialData ? 'Edit Category' : 'Create Category'
-    const description = initialData ? 'Edit a Category' : 'Add a New Category'
-    const toastMessage = initialData ? 'Category Updated' : 'Category Created'
+    const title = initialData ? 'Edit Sizs' : 'Create Sizs'
+    const description = initialData ? 'Edit a Sizs' : 'Add a New Sizs'
+    const toastMessage = initialData ? 'Sizs Updated' : 'Sizs Created'
     const action = initialData ? 'Save Changes' : 'Create'
 
 
@@ -46,7 +46,7 @@ const CategoryForm = ({ initialData, billboards }) => {
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
             name: '',
-            billboardId: ''
+            value: ''
         },
     })
 
@@ -54,12 +54,12 @@ const CategoryForm = ({ initialData, billboards }) => {
         try {
             setLoading(true)
             if (initialData) {
-                await axios.patch(`/api/${params.storeId}/categories/${params.categoryId}`, data)
+                await axios.patch(`/api/${params.storeId}/sizes/${params.sizeId}`, data)
             } else {
-                await axios.post(`/api/${params.storeId}/categories`, data)
+                await axios.post(`/api/${params.storeId}/sizes`, data)
             }
             router.refresh()
-            router.push(`/${params.storeId}/categories`, undefined, { shallow: true })
+            router.push(`/${params.storeId}/sizes`, undefined, { shallow: true })
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Something Went Wrong")
@@ -71,13 +71,13 @@ const CategoryForm = ({ initialData, billboards }) => {
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/categories/${params.categoryId}`)
+            await axios.delete(`/api/${params.storeId}/sizes/${params.sizeId}`)
             router.refresh()
-            router.push(`/${params.storeId}/categories`, undefined, { shallow: true })
-            toast.success("Category Deleted")
+            router.push(`/${params.storeId}/sizes`, undefined, { shallow: true })
+            toast.success("Size Deleted")
 
         } catch (error) {
-            toast.error("Make Sure you Remove all Products using this Category First.")
+            toast.error("Make Sure you Remove all Product using this Size First.")
         } finally {
             setLoading(false)
             setOpen(false)
@@ -109,7 +109,6 @@ const CategoryForm = ({ initialData, billboards }) => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 w-full'>
 
-
                     <div className="grid grid-cols-3 gap-8">
                         <FormField
                             contron={form.control}
@@ -118,35 +117,21 @@ const CategoryForm = ({ initialData, billboards }) => {
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Category Name" {...field} />
+                                        <Input disabled={loading} placeholder="Size Name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-
                         <FormField
                             contron={form.control}
-                            name="billboardId"
+                            name="value"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Billboard</FormLabel>
-                                    <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue defaultValue={field.value} placeholder="Select a billboard" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {
-                                                billboards.map(billboard => (
-                                                    <SelectItem key={billboard.id} value={billboard.id}>
-                                                        {billboard.label}
-                                                    </SelectItem>
-                                                ))
-                                            }
-                                        </SelectContent>
-                                    </Select>
+                                    <FormLabel>Size Value</FormLabel>
+                                    <FormControl>
+                                        <Input disabled={loading} placeholder="Size Value" {...field} />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -162,4 +147,4 @@ const CategoryForm = ({ initialData, billboards }) => {
     );
 };
 
-export default CategoryForm;
+export default SizeForm;
