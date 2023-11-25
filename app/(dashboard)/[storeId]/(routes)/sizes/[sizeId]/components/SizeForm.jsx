@@ -22,11 +22,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import AlertModal from '@/components/modals/AlertModal';
-import ImageUpload from '@/components/ui/ImageUpload';
 
 const formSchema = z.object({
-    label: z.string().min(1),
-    imageUrl: z.string().min(1)
+    name: z.string().min(1),
+    value: z.string().min(1)
 })
 
 const SizeForm = ({ initialData }) => {
@@ -36,10 +35,10 @@ const SizeForm = ({ initialData }) => {
     const params = useParams()
     const router = useRouter()
 
-    const title = initialData ? 'Edit Sizs' : 'Create Sizs'
-    const description = initialData ? 'Edit a Sizs' : 'Add a New Sizs'
-    const toastMessage = initialData ? 'Sizs Updated' : 'Sizs Created'
-    const action = initialData ? 'Save Changes' : 'Create'
+    const title = initialData ? 'Edit Size' : 'Create Size'
+    const description = initialData ? 'Edit a Size' : 'Add a New Size'
+    const toastMessage = initialData ? 'Size Updated' : 'Size Created'
+    const action = initialData ? 'Save Changes' : 'Create Size'
 
 
     const form = useForm({
