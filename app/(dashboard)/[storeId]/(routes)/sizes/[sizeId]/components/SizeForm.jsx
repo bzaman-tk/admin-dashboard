@@ -58,7 +58,7 @@ const SizeForm = ({ initialData }) => {
                 await axios.post(`/api/${params.storeId}/sizes`, data)
             }
             router.refresh()
-            router.push(`/${params.storeId}/sizes`, undefined, { shallow: true })
+            router.push(`/${params.storeId}/sizes`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error("Something Went Wrong")

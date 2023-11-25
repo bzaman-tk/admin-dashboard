@@ -62,7 +62,7 @@ export async function GET(req, { params }) {
             }
         })
 
-        return NextResponse.json(size)
+        return NextResponse.json(sizes)
 
     } catch (error) {
         console.log('[SIZES_GET]', error)
