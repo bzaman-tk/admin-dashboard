@@ -8,17 +8,17 @@ import { useParams, useRouter } from "next/navigation";
 import { columns } from "./columns";
 import ApiList from "@/components/ui/ApiList";
 
-const BillboardClient = ({ data }) => {
+const ProductClient = ({ data }) => {
     const router = useRouter()
     const params = useParams()
 
     return (
         <>
             <div className="flex items-center justify-between pb-4">
-                <Heading title={`Billboard [${data?.length}]`} description="Billboard Description" />
+                <Heading title={`Product [${data?.length}]`} description="Product Description" />
                 <Button
                     variant="outline"
-                    onClick={() => router.push(`/${params.storeId}/billboards/new`)}
+                    onClick={() => router.push(`/${params.storeId}/products/new`)}
                 >
                     <Plus className="mr-2 h-4 w-4" />
                     Add New
@@ -27,11 +27,11 @@ const BillboardClient = ({ data }) => {
 
             <Separator />
             <DataTable searchKey="label" columns={columns} data={data} />
-            <Heading title="API" description="API calls for Billboards" />
+            <Heading title="API" description="API calls for Products" />
             <Separator />
-            <ApiList entityName="billboards" entityIdName="billboardId" />
+            <ApiList entityName="products" entityIdName="productId" />
         </>
     );
 };
 
-export default BillboardClient;
+export default ProductClient;
