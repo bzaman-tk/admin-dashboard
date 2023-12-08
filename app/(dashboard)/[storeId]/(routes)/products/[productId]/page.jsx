@@ -6,8 +6,19 @@ const ProductPage = async ({ params }) => {
         where: {
             id: params.productId
         },
-        include: {
-            images: true
+        select: {
+            id: true,
+            price: true,
+            sizeId: true,
+            categoryId: true,
+            description: true,
+            name: true,
+            // Add other scalar fields you need here
+            Image: true,
+            // Include other related fields as needed
+            productColors: true,
+            isFeatured: true,
+            isArchived: true
         }
     })
 
@@ -27,7 +38,7 @@ const ProductPage = async ({ params }) => {
             storeId: params.storeId
         }
     })
-
+    // console.log(product)
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">

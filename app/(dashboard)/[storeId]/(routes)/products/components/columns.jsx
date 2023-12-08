@@ -32,11 +32,18 @@ export const columns = [
         header: "Color",
         cell: ({ row }) => (
             <div className="flex items-center gap-x-2">
-                {row.original.color}
-                <div
-                    className="h-6 w-6 rounded-full border"
-                    style={{ backgroundColor: row.original.color }}
-                />
+                {/* <div>
+                    {row.original.color.map((color, i) => (
+                        <span key={color.value}>
+                            {
+                                i === 0 ? color.name : (', ' + color.name)
+                            }
+                        </span>
+                    ))}
+                </div> */}
+                {row.original.color.map((color) => (
+                    <div key={color.value} className="h-6 w-6 rounded-full border" style={{ backgroundColor: color.value }} />
+                ))}
             </div>
         ),
     },

@@ -15,7 +15,7 @@ export async function GET(req, { params }) {
                 id: params.productId,
             },
             include: {
-                images: true,
+                Image: true,
                 category: true,
                 size: true,
                 color: true,
@@ -38,8 +38,9 @@ export async function PATCH(req, { params }) {
             price,
             categoryId,
             sizeId,
-            colorId,
-            images,
+            productColors,
+            Image,
+            description,
             isFeatured,
             isArchived
         } = body
@@ -50,8 +51,8 @@ export async function PATCH(req, { params }) {
         if (!name) {
             return new NextResponse("Name is Required", { status: 400 })
         }
-        if (!images || !images.length) {
-            return new NextResponse("Images are Required", { status: 400 })
+        if (!Image || !Image.length) {
+            return new NextResponse("Image are Required", { status: 400 })
         }
         if (!price) {
             return new NextResponse("Price is Required", { status: 400 })
@@ -59,7 +60,7 @@ export async function PATCH(req, { params }) {
         if (!categoryId) {
             return new NextResponse("Category Id is Required", { status: 400 })
         }
-        if (!colorId) {
+        if (!productColors) {
             return new NextResponse("Color ID is Required", { status: 400 })
         }
         if (!sizeId) {
@@ -76,6 +77,7 @@ export async function PATCH(req, { params }) {
             }
         })
         if (!storeByUserId) {
+            console.log('80');
             return new NextResponse("Unauthorized", { status: 401 })
         }
 
@@ -88,10 +90,13 @@ export async function PATCH(req, { params }) {
                 price,
                 categoryId,
                 sizeId,
-                colorId,
+                productColors: {
+                    deleteMany: {}
+                },
+                description,
                 isFeatured,
                 isArchived,
-                images: {
+                Image: {
                     deleteMany: {}
                 }
             }
@@ -102,11 +107,18 @@ export async function PATCH(req, { params }) {
                 id: params.productId
             },
             data: {
-                images: {
+                Image: {
                     createMany: {
-                        // data: [...images.map((image: { url: string }) => image)]
-                        data: images.map((image) => ({ url: image.url }))
+                        // data: [...Image.map((image: { url: string }) => image)]
+                        data: Image.map((image) => ({ url: image.url }))
                     }
+                },
+                productColors: {
+                    create: productColors.map(color => ({
+                        color: {
+                            connect: { id: color.colorId }
+                        }
+                    }))
                 }
             }
         })

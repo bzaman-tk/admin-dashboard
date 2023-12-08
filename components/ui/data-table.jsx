@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input"
 
 
 export function DataTable({ columns, data, searchKey }) {
+    // console.log(data);
 
     const [columnFilters, setColumnFilters] = useState(
         []

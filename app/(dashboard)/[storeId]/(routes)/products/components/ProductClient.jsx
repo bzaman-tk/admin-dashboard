@@ -9,6 +9,7 @@ import { columns } from "./columns";
 import ApiList from "@/components/ui/ApiList";
 
 const ProductClient = ({ data }) => {
+    // console.log(data);
     const router = useRouter()
     const params = useParams()
 

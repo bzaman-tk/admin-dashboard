@@ -26,14 +26,19 @@ import AlertModal from '@/components/modals/AlertModal';
 import ImageUpload from '@/components/ui/ImageUpload';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenuCheckboxes } from '@/components/ui/DropdownMenuCheckboxes';
 
 const formSchema = z.object({
     name: z.string().min(1),
-    images: z.object({ url: z.string() }).array(),
+    Image: z.object({ url: z.string() }).array(),
     price: z.coerce.number().min(1),
     categoryId: z.string().min(1),
-    colorId: z.string().min(1),
+    productColors: z.array(z.object({ colorId: z.string().min(1), })).min(1),
+    // productColors: z.array(z.object({ id: z.string() })).min(1),
+    // productColors: z.string().min(1),
+    // productColors: z.array(z.string()).min(1),
     sizeId: z.string().min(1),
+    description: z.string().min(1).optional(),
     isFeatured: z.boolean().default(false).optional(),
     isArchived: z.boolean().default(false).optional(),
 })
@@ -41,6 +46,7 @@ const formSchema = z.object({
 const ProductForm = ({ initialData, categories, colors, sizes }) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [colorValue, setColorValue] = useState([])
 
     const params = useParams()
     const router = useRouter()
@@ -58,11 +64,12 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
             price: parseFloat(String(initialData?.price))
         } : {
             name: '',
-            images: [],
+            Image: [],
             price: 0,
             categoryId: '',
-            colorId: '',
+            productColors: '',
             sizeId: '',
+            description: '',
             isFeatured: false,
             isArchived: false
         },
@@ -72,9 +79,9 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
         try {
             setLoading(true)
             if (initialData) {
-                await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data)
+                await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data) // 
             } else {
-                await axios.post(`/api/${params.storeId}/products`, data)
+                await axios.post(`/api/${params.storeId}/products`, data) // 
             }
             router.refresh()
             router.push(`/${params.storeId}/products`, undefined, { shallow: true })
@@ -101,7 +108,7 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
             setOpen(false)
         }
     }
-
+    // console.log(colorValue)
     return (
         <>
             <AlertModal
@@ -127,11 +134,11 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 w-full'>
                     <FormField
-                        contron={form.control}
-                        name="images"
+                        control={form.control}
+                        name="Image"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Images</FormLabel>
+                                <FormLabel>Image</FormLabel>
                                 <FormControl>
                                     <ImageUpload
                                         value={field.value.map(image => image.url)}
@@ -146,7 +153,7 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
                     />
                     <div className="grid grid-cols-3 gap-8">
                         <FormField
-                            contron={form.control}
+                            control={form.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
@@ -159,7 +166,7 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
                             )}
                         />
                         <FormField
-                            contron={form.control}
+                            control={form.control}
                             name="price"
                             render={({ field }) => (
                                 <FormItem>
@@ -172,7 +179,7 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
                             )}
                         />
                         <FormField
-                            contron={form.control}
+                            control={form.control}
                             name="categoryId"
                             render={({ field }) => (
                                 <FormItem>
@@ -198,7 +205,7 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
                             )}
                         />
                         <FormField
-                            contron={form.control}
+                            control={form.control}
                             name="sizeId"
                             render={({ field }) => (
                                 <FormItem>
@@ -224,8 +231,27 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
                             )}
                         />
                         <FormField
-                            contron={form.control}
-                            name="colorId"
+                            control={form.control}
+                            name="productColors"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Color</FormLabel>
+                                    <FormControl>
+                                        <DropdownMenuCheckboxes
+                                            defaultvalue={field.value}
+                                            options={colors}
+                                            form={form}
+                                            setColorValue={setColorValue}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* <FormField
+                            control={form.control}
+                            name="productColors"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Color</FormLabel>
@@ -238,7 +264,7 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
                                         <SelectContent>
                                             {
                                                 colors.map(color => (
-                                                    <SelectItem key={color.id} value={color.id}>
+                                                    <SelectItem m key={color.id} value={color.id}>
                                                         {color.name}
                                                     </SelectItem>
                                                 ))
@@ -248,7 +274,7 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
 
                         <FormField
                             control={form.control}
@@ -290,9 +316,23 @@ const ProductForm = ({ initialData, categories, colors, sizes }) => {
                                 </FormItem>
                             )}
                         />
-
-
-
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                        <Input disabled={loading} placeholder="Product Description" {...field} />
+                                        {/* <RichTextEditor
+                                            value={field.value}
+                                            onChange={(value) => field.onChange(value)}
+                                        /> */}
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
                     <Button disabled={loading} className="me-0 block" type="submit">
                         {action}
