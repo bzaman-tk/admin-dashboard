@@ -37,7 +37,8 @@ export async function PATCH(req, { params }) {
             name,
             price,
             categoryId,
-            sizeId,
+            // sizeId,
+            productSizes,
             productColors,
             Image,
             description,
@@ -63,8 +64,8 @@ export async function PATCH(req, { params }) {
         if (!productColors) {
             return new NextResponse("Color ID is Required", { status: 400 })
         }
-        if (!sizeId) {
-            return new NextResponse("Size ID is Required", { status: 400 })
+        if (!productSizes) {
+            return new NextResponse("Size is Required", { status: 400 })
         }
 
         if (!params.productId) {
@@ -89,7 +90,10 @@ export async function PATCH(req, { params }) {
                 name,
                 price,
                 categoryId,
-                sizeId,
+                // sizeId,
+                productSizes: {
+                    deleteMany: {}
+                },
                 productColors: {
                     deleteMany: {}
                 },
@@ -112,6 +116,13 @@ export async function PATCH(req, { params }) {
                         // data: [...Image.map((image: { url: string }) => image)]
                         data: Image.map((image) => ({ url: image.url }))
                     }
+                },
+                productSizes: {
+                    create: productSizes.map(size => ({
+                        size: {
+                            connect: { id: size.sizeId }
+                        }
+                    }))
                 },
                 productColors: {
                     create: productColors.map(color => ({
@@ -150,7 +161,11 @@ export async function DELETE(req, { params }) {
         if (!storeByUserId) {
             return new NextResponse("Unauthorized", { status: 401 })
         }
-
+        await prismadb.productColor.deleteMany({
+            where: {
+                productId: params.productId,
+            }
+        });
         const product = await prismadb.product.deleteMany({
             where: {
                 id: params.productId,

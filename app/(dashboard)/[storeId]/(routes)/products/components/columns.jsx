@@ -26,6 +26,19 @@ export const columns = [
     {
         accessorKey: "size",
         header: "Size",
+        cell: ({ row }) => (
+            <div className="flex items-center gap-x-2">
+                <div>
+                    {row.original.size.map((size, i) => (
+                        <span key={size.value}>
+                            {
+                                i === 0 ? size.name : (', ' + size.name)
+                            }
+                        </span>
+                    ))}
+                </div>
+            </div>
+        ),
     },
     {
         accessorKey: "color",

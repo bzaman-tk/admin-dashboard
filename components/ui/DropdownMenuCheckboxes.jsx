@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 export function DropdownMenuCheckboxes({ label, options, defaultvalue, setColorValue, form }) {
     const [checked, setChecked] = useState(
         defaultvalue.length !== 0 ?
-            options.filter(op => defaultvalue.some(dv => dv.colorId === op.id))
+            options.filter(op =>
+                (label && label === "Color") ?
+                    defaultvalue.some(dv => dv.colorId === op.id)
+                    : defaultvalue.some(dv => dv.sizeId === op.id)
+            )
             : []
     );
     const handleCheck = (item) => {
@@ -22,10 +26,13 @@ export function DropdownMenuCheckboxes({ label, options, defaultvalue, setColorV
     useEffect(() => {
         setColorValue(checked.map(item => item.id))
         if (checked.length !== 0) {
-            form.setValue("productColors", checked.map(item => ({ colorId: item.id })))
+            (label && label === "Color") ? form.setValue("productColors", checked.map(item => ({ colorId: item.id }))) : form.setValue("productSizes", checked.map(item => ({ sizeId: item.id })))
         }
         // console.log(defaultvalue, checked, options)
-    }, [checked, setColorValue, form])
+    }, [checked, setColorValue, form, label])
+
+    // console.log(checked)
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -35,10 +42,10 @@ export function DropdownMenuCheckboxes({ label, options, defaultvalue, setColorV
                             if (i === 0) {
                                 return color.name
                             } else {
-                                return ',' + color.name
+                                return ', ' + color.name
                             }
                         })
-                        : 'Select Colors'}
+                        : `Select ${label && label}`}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">

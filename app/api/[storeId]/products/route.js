@@ -10,7 +10,8 @@ export async function POST(req, { params }) {
             name,
             price,
             categoryId,
-            sizeId,
+            // sizeId,
+            productSizes,
             productColors,
             Image,
             description,
@@ -36,7 +37,7 @@ export async function POST(req, { params }) {
         if (!productColors) {
             return new NextResponse("Color ID is Required", { status: 400 })
         }
-        if (!sizeId) {
+        if (!productSizes) {
             return new NextResponse("Size ID is Required", { status: 400 })
         }
 
@@ -53,6 +54,11 @@ export async function POST(req, { params }) {
             return new NextResponse("Unauthorized", { status: 401 })
         }
 
+        const productSizesData = productSizes.map(size => ({
+            size: {
+                connect: { id: size.sizeId }
+            }
+        }));
         const productColorsData = productColors.map(color => ({
             color: {
                 connect: { id: color.colorId }
@@ -64,7 +70,10 @@ export async function POST(req, { params }) {
                 name,
                 price,
                 categoryId,
-                sizeId,
+                // sizeId,
+                productSizes: {
+                    create: productSizesData
+                },
                 productColors: {
                     create: productColorsData
                 },
@@ -106,7 +115,7 @@ export async function GET(req, { params }) {
             where: {
                 storeId: params.storeId,
                 categoryId,
-                sizeId,
+                // sizeId,
                 isFeatured: isFeatured ? true : undefined,
                 isArchived: false
             },
@@ -114,7 +123,12 @@ export async function GET(req, { params }) {
                 Image: true,
                 category: true,
                 // color: true,
-                size: true,
+                // size: true,
+                productSizes: {
+                    include: {
+                        size: true,
+                    },
+                },
                 productColors: {
                     include: {
                         color: true,

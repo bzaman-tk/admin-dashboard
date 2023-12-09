@@ -54,14 +54,14 @@ model Category {
 }
 
 model Size {
-  id        String    @id @default(uuid())
+  id        String        @id @default(uuid())
   storeId   String
-  store     Store     @relation("StoreToSize", fields: [storeId], references: [id])
+  store     Store         @relation("StoreToSize", fields: [storeId], references: [id])
   name      String
   value     String
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  products  ProductSize[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   @@index([storeId])
 }
@@ -90,17 +90,18 @@ model Product {
   price         Decimal
   isFeatured    Boolean        @default(false)
   isArchived    Boolean        @default(false)
-  sizeId        String
-  size          Size           @relation(fields: [sizeId], references: [id])
+  // sizeId        String
+  // size          Size           @relation(fields: [sizeId], references: [id])
   productColors ProductColor[]
+  productSizes  ProductSize[]
   orderItems    OrderItem[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   Image         Image[]
+  // @@index([sizeId])
 
   @@index([storeId])
   @@index([categoryId])
-  @@index([sizeId])
 }
 
 model ProductColor {
@@ -112,6 +113,17 @@ model ProductColor {
 
   @@index([productId])
   @@index([colorId])
+}
+
+model ProductSize {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  sizeId    String
+  size      Size    @relation(fields: [sizeId], references: [id])
+
+  @@index([productId])
+  @@index([sizeId])
 }
 
 model Image {

@@ -9,13 +9,11 @@ const ProductPage = async ({ params }) => {
         select: {
             id: true,
             price: true,
-            sizeId: true,
+            productSizes: true,
             categoryId: true,
             description: true,
             name: true,
-            // Add other scalar fields you need here
             Image: true,
-            // Include other related fields as needed
             productColors: true,
             isFeatured: true,
             isArchived: true

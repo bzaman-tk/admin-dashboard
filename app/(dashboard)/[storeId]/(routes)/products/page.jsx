@@ -10,10 +10,15 @@ const ProductsPage = async ({ params }) => {
         },
         include: {
             category: true,
-            size: true,
+            // size: true,
             productColors: {
                 include: {
                     color: true,
+                },
+            },
+            productSizes: {
+                include: {
+                    size: true,
                 },
             },
         },
@@ -29,6 +34,10 @@ const ProductsPage = async ({ params }) => {
             name: productColor.color.name,
             value: productColor.color.value,
         }));
+        const sizes = item.productSizes.map((productSize) => ({
+            name: productSize.size.name,
+            value: productSize.size.value,
+        }));
 
         return {
             id: item.id,
@@ -37,7 +46,7 @@ const ProductsPage = async ({ params }) => {
             isArchived: item.isArchived,
             price: formatter.format(item.price.toNumber()),
             category: item.category.name,
-            size: item.size.name,
+            size: sizes,
             color: colors,
             createdAt: format(item.createdAt, "MMMM do, yyyy")
         }
@@ -49,7 +58,6 @@ const ProductsPage = async ({ params }) => {
     return (
         <div className="flex-col">
             <div className="flex-1 space-x-4 p-8 pt-6">
-                pdr
                 <ProductClient data={formattedProducts} />
             </div>
         </div>
